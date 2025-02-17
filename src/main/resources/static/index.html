@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Student API Test</h1>
+    <p>Nhập ID sinh viên để lấy thông tin:</p>
+    <input type="text" id="studentId" placeholder="Nhập ID sinh viên">
+    <button onclick="fetchStudent()">Lấy thông tin</button>
+
+    <div class="result" id="result">
+        <!-- Kết quả sẽ được hiển thị ở đây -->
+    </div>
+</div>
+
+<script>
+    function fetchStudent() {
+        // Lấy giá trị ID từ input
+        const studentId = document.getElementById('studentId').value;
+
+        // Kiểm tra nếu ID rỗng
+        if (!studentId) {
+            alert("Vui lòng nhập ID sinh viên!");
+            return;
+        }
+
+        // URL của API
+        const apiUrl = `http://localhost:9090/api/student/${studentId}`;
+
+        // Gửi yêu cầu GET đến API
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Không tìm thấy sinh viên với ID: ${studentId}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Hiển thị kết quả
+                document.getElementById('result').innerHTML = `
+                        <strong>ID:</strong> ${data.id}<br>
+                        <strong>Tên:</strong> ${data.name}<br>
+                        <strong>Tuổi:</strong> ${data.age}
+                    `;
+            })
+            .catch(error => {
+                // Xử lý lỗi
+                document.getElementById('result').innerHTML = `<p style="color: red;">${error.message}</p>`;
+            });
+    }
+</script>
+</body>
+</html>
