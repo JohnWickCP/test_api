@@ -1,55 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student API Test</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8"> <!-- Đặt charset là UTF-8 để hỗ trợ Unicode. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Tối ưu hiển thị trên thiết bị di động. -->
+    <title>Student API Test</title> <!-- Tiêu đề trang web. -->
+    <link rel="stylesheet" href="styles.css"> <!-- Liên kết đến file CSS để làm đẹp giao diện. -->
 </head>
 <body>
 <div class="container">
-    <h1>Student API Test</h1>
-    <p>Nhập ID sinh viên để lấy thông tin:</p>
-    <input type="text" id="studentId" placeholder="Nhập ID sinh viên">
-    <button onclick="fetchStudent()">Lấy thông tin</button>
-
-    <div class="result" id="result">
-        <!-- Kết quả sẽ được hiển thị ở đây -->
-    </div>
+    <h1>Student API Test</h1> <!-- Tiêu đề chính của trang. -->
+    <p>Nhập ID sinh viên để lấy thông tin:</p> <!-- Hướng dẫn người dùng nhập ID. -->
+    <input type="text" id="studentId" placeholder="Nhập ID sinh viên"> <!-- Ô input để nhập ID sinh viên. -->
+    <button onclick="fetchStudent()">Lấy thông tin</button> <!-- Nút để gửi yêu cầu lấy thông tin sinh viên. -->
+    <div class="result" id="result"></div> <!-- Khu vực hiển thị kết quả. -->
 </div>
 
 <script>
+    /**
+     * Hàm fetchStudent() gửi yêu cầu GET đến backend để lấy thông tin sinh viên.
+     */
     function fetchStudent() {
-        // Lấy giá trị ID từ input
-        const studentId = document.getElementById('studentId').value;
+        const studentId = document.getElementById('studentId').value; // Lấy giá trị ID từ ô input.
 
-        // Kiểm tra nếu ID rỗng
+        // Kiểm tra nếu ID rỗng, hiển thị thông báo lỗi.
         if (!studentId) {
             alert("Vui lòng nhập ID sinh viên!");
             return;
         }
 
-        // URL của API
+        // URL của API backend.
         const apiUrl = `http://localhost:9090/api/student/${studentId}`;
 
-        // Gửi yêu cầu GET đến API
+        // Gửi yêu cầu GET đến API backend.
         fetch(apiUrl)
             .then(response => {
                 if (!response.ok) {
+                    // Nếu phản hồi không thành công, ném ra lỗi.
                     throw new Error(`Không tìm thấy sinh viên với ID: ${studentId}`);
                 }
-                return response.json();
+                return response.json(); // Chuyển đổi phản hồi thành JSON.
             })
             .then(data => {
-                // Hiển thị kết quả
+                // Hiển thị thông tin sinh viên lên giao diện.
                 document.getElementById('result').innerHTML = `
-                        <strong>ID:</strong> ${data.id}<br>
-                        <strong>Tên:</strong> ${data.name}<br>
-                        <strong>Tuổi:</strong> ${data.age}
-                    `;
+                    <strong>ID:</strong> ${data.id}<br>
+                    <strong>Tên:</strong> ${data.name}<br>
+                    <strong>Tuổi:</strong> ${data.age}
+                `;
             })
             .catch(error => {
-                // Xử lý lỗi
+                // Xử lý lỗi và hiển thị thông báo lỗi lên giao diện.
                 document.getElementById('result').innerHTML = `<p style="color: red;">${error.message}</p>`;
             });
     }
